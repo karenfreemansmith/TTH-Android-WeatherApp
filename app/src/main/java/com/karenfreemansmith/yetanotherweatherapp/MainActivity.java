@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -13,6 +15,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -23,11 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "Calling API: ";
   private CurrentWeather mCurrentWeather;
+  @Bind(R.id.temperatureLabel) TextView mTempLabel;
+  @Bind(R.id.timeLabel) TextView mTimeLabel;
+  @Bind(R.id.humidityAmount) TextView mHumLabel;
+  @Bind(R.id.percipitationAmount) TextView mPercipLabel;
+  @Bind(R.id.summaryLabel) TextView mSummaryLabel;
+  @Bind(R.id.iconImage) ImageView mIconView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ButterKnife.bind(this);
 
     String apiKey = "e8567e4763c3878a56df623ac21a4b9f";
     double latitude = 37.8267;
@@ -53,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, jsonData);
             if (response.isSuccessful()) {
               mCurrentWeather = getCurrentDetails(jsonData);
+              runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  updateDisplay();
+                }
+              });
             } else {
               alertUserAboutError();
             }
@@ -69,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+
+
   private CurrentWeather getCurrentDetails(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
@@ -79,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
     currentWeather.setHumidity(currently.getDouble("humidity"));
     currentWeather.setTime(currently.getLong("time"));
     currentWeather.setIcon(currently.getString("icon"));
-    currentWeather.setPercipChance(currently.getDouble("percipProbability"));
+    currentWeather.setPercipChance(currently.getDouble("precipProbability"));
     currentWeather.setSummary(currently.getString("summary"));
     currentWeather.setTemperature(currently.getDouble("temperature"));
-    currentWeather.setTimeZone(currently.getString("timeZone"));
+    currentWeather.setTimeZone(timezone);
 
     return currentWeather;
   }
@@ -95,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
       isAvailable = true;
     }
     return isAvailable;
+  }
+
+  private void updateDisplay() {
+    mTempLabel.setText(mCurrentWeather.getTemperature() + "");
+    mTimeLabel.setText("At " + mCurrentWeather.getFormattedTime() + " it will be: ");
+    mHumLabel.setText(mCurrentWeather.getHumidity() + "");
+    mPercipLabel.setText(mCurrentWeather.getPercipChance() + "%");
+    mSummaryLabel.setText(mCurrentWeather.getSummary());
   }
 
   private void alertUserAboutError() {

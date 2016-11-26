@@ -11,10 +11,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.karenfreemansmith.yetanotherweatherapp.MainActivity"
-    android:background="?android:attr/colorPressedHighlight">
+    android:background="@drawable/fall">
 
     <TextView
-        android:text="68"
+        android:text="--"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -37,27 +37,15 @@
         android:id="@+id/degreeImage"/>
 
     <TextView
-        android:text="At 5:00 pm it will be: "
+        android:text="..."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/temperatureLabel"
         android:layout_centerHorizontal="true"
         android:id="@+id/timeLabel"
         android:textSize="18sp"
         android:textColor="#80ffffff"
-        android:layout_marginBottom="12dp"/>
-
-    <TextView
-        android:text="Portland, OR"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/timeLabel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="36dp"
-        android:id="@+id/locationLabel"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:textColor="@android:color/background_light"
-        android:textSize="24sp"/>
+        android:layout_marginBottom="12dp"
+        android:layout_above="@+id/summaryLabel"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -95,12 +83,13 @@
                 android:textColor="#80ffffff"/>
 
             <TextView
-                android:text="0.88"
+                android:text="--"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/humidityAmount"
                 android:textAlignment="center"
-                android:textColor="#ffffffff"/>
+                android:textColor="#ffffffff"
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -119,24 +108,66 @@
                 android:textColor="#80ffffff"/>
 
             <TextView
-                android:text=".10"
+                android:text="--"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/percipitationAmount"
                 android:textAlignment="center"
-                android:textColor="#ffffffff"/>
+                android:textColor="#ffffffff"
+                android:textSize="24sp"/>
         </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:text="Stormy with a chance of meatballs"
+        android:text="Milwaukie, OR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationLabel"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_above="@+id/timeLabel"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/refresh"
+        android:id="@+id/refreshImageView"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
+        android:maxWidth="60dp"
+        android:maxHeight="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_marginTop="60dp"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/refreshImageView"
+        android:layout_alignRight="@+id/refreshImageView"
+        android:layout_alignEnd="@+id/refreshImageView"
+        android:id="@+id/progressBar"
+        android:layout_alignBottom="@+id/refreshImageView"
+        android:layout_alignLeft="@+id/refreshImageView"/>
+
+    <TextView
+        android:text="getting weather data..."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/summaryLabel"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
         android:textAlignment="center"
-        android:textColor="#80ffffff"/>
+        android:textColor="#80ffffff"
+        android:textSize="18sp"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_marginBottom="24dp"
+        android:layout_above="@+id/temperatureLabel"/>
 
 </RelativeLayout>

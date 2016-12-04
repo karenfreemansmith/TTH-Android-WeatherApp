@@ -16,7 +16,11 @@ import android.widget.Toast;
 
 import com.karenfreemansmith.yetanotherweatherapp.weather.Current;
 import com.karenfreemansmith.yetanotherweatherapp.R;
+import com.karenfreemansmith.yetanotherweatherapp.weather.Day;
+import com.karenfreemansmith.yetanotherweatherapp.weather.Forecast;
+import com.karenfreemansmith.yetanotherweatherapp.weather.Hour;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +37,8 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "Calling API: ";
-  private Current mCurrent;
+  private Forecast mForecast;
+
   @Bind(R.id.temperatureLabel) TextView mTempLabel;
   @Bind(R.id.timeLabel) TextView mTimeLabel;
   @Bind(R.id.humidityAmount) TextView mHumLabel;
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             String jsonData = response.body().string();
             Log.v(TAG, jsonData);
             if (response.isSuccessful()) {
-              mCurrent = getCurrentDetails(jsonData);
+              mForecast = parseForcastDetails(jsonData);
               runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -133,6 +138,58 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  private Forecast parseForcastDetails(String jsonData) throws JSONException{
+    Forecast forecast = new Forecast();
+
+    forecast.setCurrent(getCurrentDetails(jsonData));
+    forecast.setHourly(getHourly(jsonData));
+    forecast.setDaily(getDaily(jsonData));
+
+    return forecast;
+  }
+
+  private Day[] getDaily(String jsonData) throws JSONException {
+    JSONObject forecast = new JSONObject(jsonData);
+    String timezone = forecast.getString("timezone");
+    JSONObject daily = forecast.getJSONObject("daily");
+    JSONArray data = forecast.getJSONArray("data");
+
+    Day[] days = new Day[data.length()];
+
+    for(int i=0; i<data.length(); i++) {
+      JSONObject jsonDay = data.getJSONObject(i);
+      Day day = new Day();
+
+      day.setSummary(jsonDay.getString("summary"));
+      day.setIcon(jsonDay.getString("icon"));
+      day.setTemperatureMax(jsonDay.getDouble("temperatureMax"));
+      day.setTime(jsonDay.getLong("time"));
+      day.setTimezone(jsonDay.getString("timezone"));
+
+      days[i] = day;
+    }
+    return days;
+  }
+
+  private Hour[] getHourly(String jsonData) throws JSONException {
+    JSONObject forecast = new JSONObject(jsonData);
+    String timezone = forecast.getString("timezone");
+    JSONObject hourly = forecast.getJSONObject("hourly");
+    JSONArray data = hourly.getJSONArray("data");
+
+    Hour[] hours = new Hour[data.length()];
+    for(int i=0; i<data.length(); i++) {
+      JSONObject jsonHour = data.getJSONObject(i);
+      Hour hour = new Hour();
+      hour.setSummary(jsonHour.getString("summary"));
+      hour.setTemperature(jsonHour.getDouble("temperature"));
+      hour.setIcon(jsonHour.getString("icon"));
+      hour.setTime(jsonHour.getLong("time"));
+      hour.setTimezone(jsonHour.getString("timezone"));
+      hours[i] = hour;
+    }
+    return hours;
+  }
 
   private Current getCurrentDetails(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
@@ -163,13 +220,14 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateDisplay() {
-    mTempLabel.setText(mCurrent.getTemperature() + "");
-    mTimeLabel.setText("At " + mCurrent.getFormattedTime() + " it will be: ");
-    mHumLabel.setText(mCurrent.getHumidity() + "");
-    mPercipLabel.setText(mCurrent.getPercipChance() + "%");
-    mSummaryLabel.setText(mCurrent.getSummary());
+    Current current = mForecast.getCurrent();
+    mTempLabel.setText(current.getTemperature() + "");
+    mTimeLabel.setText("At " + current.getFormattedTime() + " it will be: ");
+    mHumLabel.setText(current.getHumidity() + "");
+    mPercipLabel.setText(current.getPercipChance() + "%");
+    mSummaryLabel.setText(current.getSummary());
 
-    Drawable drawable = ContextCompat.getDrawable(this, mCurrent.getIconId());
+    Drawable drawable = ContextCompat.getDrawable(this, current.getIconId());
     mIconView.setImageDrawable(drawable);
     //Drawable drawable = getResources().getDrawable(drawable, null);
   }

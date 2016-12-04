@@ -1,6 +1,7 @@
 package com.karenfreemansmith.yetanotherweatherapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,6 +29,7 @@ import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
   private Day[] getDaily(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
+    Log.i(TAG, "From Daily " + timezone);
     JSONObject daily = forecast.getJSONObject("daily");
     JSONArray data = forecast.getJSONArray("data");
 
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
       day.setIcon(jsonDay.getString("icon"));
       day.setTemperatureMax(jsonDay.getDouble("temperatureMax"));
       day.setTime(jsonDay.getLong("time"));
-      day.setTimezone(jsonDay.getString("timezone"));
+      day.setTimezone(timezone);
 
       days[i] = day;
     }
@@ -174,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
   private Hour[] getHourly(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
+    Log.i(TAG, "From Hourly " + timezone);
     JSONObject hourly = forecast.getJSONObject("hourly");
     JSONArray data = hourly.getJSONArray("data");
 
@@ -185,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
       hour.setTemperature(jsonHour.getDouble("temperature"));
       hour.setIcon(jsonHour.getString("icon"));
       hour.setTime(jsonHour.getLong("time"));
-      hour.setTimezone(jsonHour.getString("timezone"));
+      hour.setTimezone(timezone);
       hours[i] = hour;
     }
     return hours;
@@ -194,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
   private Current getCurrentDetails(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
-    Log.i(TAG, "From JSON: " + timezone);
+    Log.i(TAG, "From Current " + timezone);
     JSONObject currently = forecast.getJSONObject("currently");
 
     Current current = new Current();
@@ -235,5 +239,17 @@ public class MainActivity extends AppCompatActivity {
   private void alertUserAboutError() {
     AlertDialogFragment dialog = new AlertDialogFragment();
     //dialog.show(getFragmentManager(), "error_dialog");
+  }
+
+  @OnClick(R.id.dailyButton)
+  public void startDailyActivity(View v) {
+    Intent intent = new Intent(this, DailyForecastActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.hourlyButton)
+  public void startHourlyActivity(View v) {
+    Intent intent = new Intent(this, HourlyForecastActivity.class);
+    startActivity(intent);
   }
 }

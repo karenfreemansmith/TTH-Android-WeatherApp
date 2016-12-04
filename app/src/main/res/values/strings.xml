@@ -2,4 +2,5 @@
     <string name="app_name">Milwaukie Oregon Weather</string>
     <string name="ERROR_TITLE">Oops! Sorry!</string>
     <string name="error_message">There was an error. Please try again.</string>
+    <string name="noforcastdata">there is no data to display</string>
 </resources>

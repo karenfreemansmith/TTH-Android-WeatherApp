@@ -1,14 +1,21 @@
-package com.karenfreemansmith.yetanotherweatherapp;
+package com.karenfreemansmith.yetanotherweatherapp.ui;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.karenfreemansmith.yetanotherweatherapp.weather.Current;
+import com.karenfreemansmith.yetanotherweatherapp.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,13 +33,15 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "Calling API: ";
-  private CurrentWeather mCurrentWeather;
+  private Current mCurrent;
   @Bind(R.id.temperatureLabel) TextView mTempLabel;
   @Bind(R.id.timeLabel) TextView mTimeLabel;
   @Bind(R.id.humidityAmount) TextView mHumLabel;
   @Bind(R.id.percipitationAmount) TextView mPercipLabel;
   @Bind(R.id.summaryLabel) TextView mSummaryLabel;
   @Bind(R.id.iconImage) ImageView mIconView;
+  @Bind(R.id.refreshImageView) ImageView mRefreshView;
+  @Bind(R.id.progressBar) ProgressBar mProgressBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +49,27 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
+    mProgressBar.setVisibility(View.INVISIBLE);
+
+    final double latitude = 45.4462;
+    final double longitude = -122.6393;
+
+    mRefreshView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        getForcast(latitude, longitude);
+      }
+    });
+
+    getForcast(latitude, longitude);
+  }
+
+  private void getForcast(double latitude, double longitude) {
     String apiKey = "e8567e4763c3878a56df623ac21a4b9f";
-    double latitude = 37.8267;
-    double longitude = -122.423;
     String forcastUrl = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + ", " + longitude;
     if (isNetworkAvailable()) {
+      toggleProgressBar();
+
       OkHttpClient client = new OkHttpClient();
       Request request = new Request.Builder()
           .url(forcastUrl)
@@ -54,16 +79,28 @@ public class MainActivity extends AppCompatActivity {
       call.enqueue(new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
-
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              toggleProgressBar();
+            }
+          });
+          alertUserAboutError();
         }
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              toggleProgressBar();
+            }
+          });
           try {
             String jsonData = response.body().string();
             Log.v(TAG, jsonData);
             if (response.isSuccessful()) {
-              mCurrentWeather = getCurrentDetails(jsonData);
+              mCurrent = getCurrentDetails(jsonData);
               runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -83,27 +120,36 @@ public class MainActivity extends AppCompatActivity {
     } else {
       Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
     }
+  }
+
+  private void toggleProgressBar() {
+    if(mProgressBar.getVisibility()==View.INVISIBLE) {
+      mProgressBar.setVisibility(View.VISIBLE);
+      mRefreshView.setVisibility(View.INVISIBLE);
+    } else {
+      mProgressBar.setVisibility(View.INVISIBLE);
+      mRefreshView.setVisibility(View.VISIBLE);
+    }
 
   }
 
 
-
-  private CurrentWeather getCurrentDetails(String jsonData) throws JSONException {
+  private Current getCurrentDetails(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
     Log.i(TAG, "From JSON: " + timezone);
     JSONObject currently = forecast.getJSONObject("currently");
 
-    CurrentWeather currentWeather = new CurrentWeather();
-    currentWeather.setHumidity(currently.getDouble("humidity"));
-    currentWeather.setTime(currently.getLong("time"));
-    currentWeather.setIcon(currently.getString("icon"));
-    currentWeather.setPercipChance(currently.getDouble("precipProbability"));
-    currentWeather.setSummary(currently.getString("summary"));
-    currentWeather.setTemperature(currently.getDouble("temperature"));
-    currentWeather.setTimeZone(timezone);
+    Current current = new Current();
+    current.setHumidity(currently.getDouble("humidity"));
+    current.setTime(currently.getLong("time"));
+    current.setIcon(currently.getString("icon"));
+    current.setPercipChance(currently.getDouble("precipProbability"));
+    current.setSummary(currently.getString("summary"));
+    current.setTemperature(currently.getDouble("temperature"));
+    current.setTimeZone(timezone);
 
-    return currentWeather;
+    return current;
   }
 
   private boolean isNetworkAvailable() {
@@ -117,11 +163,15 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateDisplay() {
-    mTempLabel.setText(mCurrentWeather.getTemperature() + "");
-    mTimeLabel.setText("At " + mCurrentWeather.getFormattedTime() + " it will be: ");
-    mHumLabel.setText(mCurrentWeather.getHumidity() + "");
-    mPercipLabel.setText(mCurrentWeather.getPercipChance() + "%");
-    mSummaryLabel.setText(mCurrentWeather.getSummary());
+    mTempLabel.setText(mCurrent.getTemperature() + "");
+    mTimeLabel.setText("At " + mCurrent.getFormattedTime() + " it will be: ");
+    mHumLabel.setText(mCurrent.getHumidity() + "");
+    mPercipLabel.setText(mCurrent.getPercipChance() + "%");
+    mSummaryLabel.setText(mCurrent.getSummary());
+
+    Drawable drawable = ContextCompat.getDrawable(this, mCurrent.getIconId());
+    mIconView.setImageDrawable(drawable);
+    //Drawable drawable = getResources().getDrawable(drawable, null);
   }
 
   private void alertUserAboutError() {

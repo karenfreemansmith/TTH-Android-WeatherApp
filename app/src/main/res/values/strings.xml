@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Yet Another Weather App</string>
+    <string name="app_name">Milwaukie Oregon Weather</string>
     <string name="ERROR_TITLE">Oops! Sorry!</string>
     <string name="error_message">There was an error. Please try again.</string>
 </resources>

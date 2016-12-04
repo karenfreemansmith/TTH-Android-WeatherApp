@@ -1,4 +1,4 @@
-package com.karenfreemansmith.yetanotherweatherapp;
+package com.karenfreemansmith.yetanotherweatherapp.ui;
 
 
 import android.app.Dialog;

@@ -1,4 +1,6 @@
-package com.karenfreemansmith.yetanotherweatherapp;
+package com.karenfreemansmith.yetanotherweatherapp.weather;
+
+import com.karenfreemansmith.yetanotherweatherapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.TimeZone;
  * Created by Karen Freeman-Smith on 11/21/2016.
  */
 
-public class CurrentWeather {
+public class Current {
   private String mIcon;
   private long mTime;
   private double mTemperature;

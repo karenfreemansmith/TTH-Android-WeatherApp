@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
   private Hour[] getHourly(String jsonData) throws JSONException {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
-    Log.i(TAG, "From Hourly " + timezone);
     JSONObject hourly = forecast.getJSONObject("hourly");
     JSONArray data = hourly.getJSONArray("data");
 
@@ -199,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     JSONObject forecast = new JSONObject(jsonData);
     String timezone = forecast.getString("timezone");
     Log.i(TAG, "From Current " + timezone);
+
     JSONObject currently = forecast.getJSONObject("currently");
 
     Current current = new Current();

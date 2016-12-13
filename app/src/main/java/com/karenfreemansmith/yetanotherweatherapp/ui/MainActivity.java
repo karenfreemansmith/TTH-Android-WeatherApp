@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     String timezone = forecast.getString("timezone");
     Log.i(TAG, "From Daily " + timezone);
     JSONObject daily = forecast.getJSONObject("daily");
-    JSONArray data = forecast.getJSONArray("data");
+    JSONArray data = daily.getJSONArray("data");
 
     Day[] days = new Day[data.length()];
 

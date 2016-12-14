@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_gradient"
+                android:paddingLeft="64dp"
+                android:paddingRight="64dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@drawable/bg_temperature"
+        android:id="@+id/circleImageView"
+        android:src="@drawable/bg_temperature"/>
+
+    <TextView
+        android:text="100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempText"
+        android:textColor="#f25019"
+        android:layout_alignBottom="@+id/circleImageView"
+        android:layout_alignTop="@+id/circleImageView"
+        android:layout_alignLeft="@+id/circleImageView"
+        android:layout_alignRight="@+id/circleImageView"
+        android:gravity="center_vertical|center_horizontal"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@drawable/fog"
+        android:layout_alignBottom="@+id/circleImageView"
+        android:layout_toRightOf="@+id/circleImageView"
+        android:layout_toEndOf="@+id/circleImageView"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/iconImageView"
+        android:src="@drawable/cloudy"
+        android:paddingLeft="10dp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/iconImageView"
+        android:layout_toRightOf="@+id/iconImageView"
+        android:layout_toEndOf="@+id/iconImageView"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/dayNameLabel"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/background_light"
+        android:paddingLeft="10dp"/>
+</RelativeLayout>

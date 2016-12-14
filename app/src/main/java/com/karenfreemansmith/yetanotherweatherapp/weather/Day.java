@@ -1,15 +1,24 @@
 package com.karenfreemansmith.yetanotherweatherapp.weather;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by Karen Freeman-Smith on 12/3/2016.
  */
 
-public class Day {
+public class Day implements Parcelable {
   private long mTime;
   private String mSummary;
   private double mTemperatureMax;
   private String mIcon;
   private String mTimezone;
+
+  public Day() {}
 
   public long getTime() {
     return mTime;
@@ -27,8 +36,9 @@ public class Day {
     mSummary = summary;
   }
 
-  public double getTemperatureMax() {
-    return mTemperatureMax;
+  public int getTemperatureMax() {
+
+    return (int) Math.round(mTemperatureMax);
   }
 
   public void setTemperatureMax(double temperatureMax) {
@@ -50,4 +60,49 @@ public class Day {
   public void setTimezone(String timezone) {
     mTimezone = timezone;
   }
+
+  public int getIconId() {
+    return Forecast.getIconId(mIcon);
+  }
+
+  public String getDayOfWeek() {
+    SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+    formatter.setTimeZone(TimeZone.getTimeZone(mTimezone));
+    Date dateTime = new Date(mTime * 1000);
+    return formatter.format(dateTime);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;  // not used...
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    parcel.writeLong(mTime);
+    parcel.writeString(mSummary);
+    parcel.writeDouble(mTemperatureMax);
+    parcel.writeString(mIcon);
+    parcel.writeString(mTimezone);
+  }
+
+  private Day(Parcel in) {
+    mTime = in.readLong();
+    mSummary = in.readString();
+    mTemperatureMax = in.readDouble();
+    mIcon = in.readString();
+    mTimezone = in.readString();
+  }
+
+  public static final Creator<Day> CREATOR = new Creator<Day>() {
+    @Override
+    public Day createFromParcel(Parcel parcel) {
+      return new Day(parcel);
+    }
+
+    @Override
+    public Day[] newArray(int size) {
+      return new Day[size];
+    }
+  };
 }

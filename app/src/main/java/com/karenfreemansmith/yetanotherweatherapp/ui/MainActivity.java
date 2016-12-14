@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.karenfreemansmith.yetanotherweatherapp.Constants;
 import com.karenfreemansmith.yetanotherweatherapp.weather.Current;
 import com.karenfreemansmith.yetanotherweatherapp.R;
 import com.karenfreemansmith.yetanotherweatherapp.weather.Day;
@@ -244,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
   @OnClick(R.id.dailyButton)
   public void startDailyActivity(View v) {
     Intent intent = new Intent(this, DailyForecastActivity.class);
+    intent.putExtra(Constants.DAILY_FORECAST, mForecast.getDaily());
     startActivity(intent);
   }
 

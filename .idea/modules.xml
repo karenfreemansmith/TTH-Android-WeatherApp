@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TTH-Android-WeatherApp.iml" filepath="$PROJECT_DIR$/TTH-Android-WeatherApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/YetAnotherWeatherApp.iml" filepath="$PROJECT_DIR$/YetAnotherWeatherApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

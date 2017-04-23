@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
   @OnClick(R.id.hourlyButton)
   public void startHourlyActivity(View v) {
     Intent intent = new Intent(this, HourlyForecastActivity.class);
+    intent.putExtra(Constants.HOURLY_FORECAST, mForecast.getHourly());
     startActivity(intent);
   }
 }

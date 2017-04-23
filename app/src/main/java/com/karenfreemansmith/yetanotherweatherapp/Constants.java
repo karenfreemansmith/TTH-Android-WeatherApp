@@ -6,4 +6,5 @@ package com.karenfreemansmith.yetanotherweatherapp;
 
 public class Constants {
   public static String DAILY_FORECAST = "DAILY_FORECAST";
+  public static String HOURLY_FORECAST = "HOURLY_FORECAST";
 }

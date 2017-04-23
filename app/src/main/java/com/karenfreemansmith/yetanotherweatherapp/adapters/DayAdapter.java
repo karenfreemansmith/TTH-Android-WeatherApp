@@ -1,8 +1,6 @@
 package com.karenfreemansmith.yetanotherweatherapp.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +54,12 @@ public class DayAdapter extends BaseAdapter {
     }
 
     Day day = mDays[position];
+    // **** NULL POINTER ERROR in this block of code - seems to be missing "day" information! ****
 //    Drawable drawable = ContextCompat.getDrawable(this, day.getIconId());
 //    holder.iconImageView.setImageDrawable(drawable);
-    holder.iconImageView.setImageResource(day.getIconId());
-    holder.tempText.setText(day.getTemperatureMax()+"");
-    holder.dayText.setText(day.getDayOfWeek());
+//    holder.iconImageView.setImageResource(day.getIconId());
+//    holder.tempText.setText(day.getTemperatureMax()+"");
+//    holder.dayText.setText(day.getDayOfWeek());
 
     return convertView;
   }
